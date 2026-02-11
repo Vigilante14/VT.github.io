@@ -18,22 +18,40 @@
 
     .card {
       background: white;
-      padding: 40px 50px;
+      padding: 40px 55px;
       border-radius: 25px;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0,0,0,0.25);
       z-index: 10;
+      position: relative;
+    }
+
+    .heart {
+      font-size: 48px;
+      margin-bottom: 10px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
     }
 
     h1 {
-      margin-bottom: 35px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      position: relative;
+      width: 320px;
+      height: 120px;
+      margin: 0 auto;
     }
 
     .cloud {
-      position: relative;
-      display: inline-block;
+      position: absolute;
       padding: 18px 45px;
-      margin: 15px;
       font-size: 16px;
       font-weight: bold;
       border: none;
@@ -53,6 +71,7 @@
     }
 
     #yes {
+      left: 0;
       background: #ff4d6d;
       color: white;
       box-shadow:
@@ -63,9 +82,9 @@
     }
 
     #no {
+      right: 0;
       background: #dee2e6;
       color: #333;
-      position: absolute;
       box-shadow:
         25px 0 0 #dee2e6,
         -25px 0 0 #dee2e6,
@@ -94,9 +113,13 @@
 <body>
 
   <div class="card">
-    <h1 id="title">Will you be my Valentine? 💖</h1>
-    <button id="yes" class="cloud">YES ☁️</button>
-    <button id="no" class="cloud">NO ☁️</button>
+    <div class="heart">💖💗💖</div>
+    <h1 id="title">Will you be my Valentine?</h1>
+
+    <div class="buttons">
+      <button id="yes" class="cloud">YES ☁️</button>
+      <button id="no" class="cloud">NO ☁️</button>
+    </div>
   </div>
 
   <script>
@@ -104,19 +127,33 @@
     const noBtn = document.getElementById("no");
     const title = document.getElementById("title");
 
+    let locked = false;
+
     // NO kabur
     noBtn.addEventListener("mouseover", () => {
-      noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
-      noBtn.style.top  = Math.random() * (window.innerHeight - 60) + "px";
+      if (locked) return;
+
+      const container = document.querySelector(".buttons");
+      const maxX = container.offsetWidth - noBtn.offsetWidth;
+      const maxY = container.offsetHeight - noBtn.offsetHeight;
+
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top  = Math.random() * maxY + "px";
     });
 
-    // YES → CONFETTI 🎉
+    // YES FINAL
     yesBtn.addEventListener("click", () => {
-      title.innerText = "YAAAY!! ☁️💕🥰";
+      locked = true;
 
-      for (let i = 0; i < 100; i++) {
+      title.innerText = "YAAAY!! ☁️💕🥰";
+      noBtn.style.display = "none";
+
+      for (let i = 0; i < 120; i++) {
         createConfetti();
       }
+
+      yesBtn.disabled = true;
+      yesBtn.style.cursor = "default";
     });
 
     function createConfetti() {
@@ -131,10 +168,7 @@
       confetti.style.animationDuration = 2 + Math.random() * 2 + "s";
 
       document.body.appendChild(confetti);
-
-      setTimeout(() => {
-        confetti.remove();
-      }, 4000);
+      setTimeout(() => confetti.remove(), 4000);
     }
   </script>
 
