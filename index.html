@@ -18,11 +18,10 @@ body{
 
 .card{
   background:white;
-  padding:45px 60px;
+  padding:50px 70px;
   border-radius:25px;
   text-align:center;
   box-shadow:0 20px 50px rgba(0,0,0,0.25);
-  z-index:10;
   position:relative;
 }
 
@@ -48,7 +47,7 @@ button{
   border:none;
   border-radius:50px;
   cursor:pointer;
-  transition:0.2s;
+  transition:transform 0.2s ease;
 }
 
 #yes{
@@ -59,10 +58,9 @@ button{
 
 #no{
   background:#dee2e6;
-  position:absolute;
-  left:50%;
-  top:65%;
-  transform:translate(-50%,-50%);
+  position:fixed; /* IMPORTANT */
+  left:60%;
+  top:60%;
 }
 
 .confetti{
@@ -87,10 +85,10 @@ button{
 <div class="card">
   <div class="heart">💖💗💖</div>
   <h1 id="title">Poyen Will you be my Valentine?</h1>
-
   <button id="yes">YES ☁️</button>
-  <button id="no">NO ☁️</button>
 </div>
+
+<button id="no">NO ☁️</button>
 
 <script>
 const yesBtn = document.getElementById("yes");
@@ -98,8 +96,9 @@ const noBtn  = document.getElementById("no");
 const title  = document.getElementById("title");
 
 let locked = false;
+let scaleSize = 1;
 
-// NO kabur jauh + mengecil
+// NO kabur ke seluruh layar + makin kecil tiap kabur
 noBtn.addEventListener("mouseenter", () => {
   if(locked) return;
 
@@ -108,7 +107,11 @@ noBtn.addEventListener("mouseenter", () => {
 
   noBtn.style.left = x + "px";
   noBtn.style.top  = y + "px";
-  noBtn.style.transform = "scale(0.6)";
+
+  scaleSize -= 0.1;
+  if(scaleSize < 0.3) scaleSize = 0.3;
+
+  noBtn.style.transform = `scale(${scaleSize})`;
 });
 
 // YES final
